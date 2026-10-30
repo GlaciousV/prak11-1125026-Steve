@@ -33,7 +33,7 @@ public class CreditCard implements PaymentStrategy {
     @Override
     public boolean validate(double amount) {
         // return amount > 0 && (this.limit - this.currentDebt) >= amount;
-        return  amount > 0 && getAvailableCredit() >= amount;
+        return amount > 0 && getAvailableCredit() >= amount;
     }
 
     @Override
@@ -53,5 +53,10 @@ public class CreditCard implements PaymentStrategy {
         auths.add(AuthorizationMethod.CCV);
         auths.add(AuthorizationMethod.PIN);
         return auths;
+    }
+
+    @Override
+    public String getDetails() {
+        return "Credit Card (" + cardNumber + ") - Limit Tersedia: " + getAvailableCredit();
     }
 }

@@ -37,4 +37,8 @@ public class Wallet implements PaymentStrategy {
     public List<AuthorizationMethod> getRequiredAuthorizations() {
         return new ArrayList<>();
     }
+    @Override
+    public String getDetails() {
+        return "Wallet (" + name + ") - Saldo: " + cashValue;
+    }
 }

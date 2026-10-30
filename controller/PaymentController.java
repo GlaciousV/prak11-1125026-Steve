@@ -1,4 +1,5 @@
 package controller;
+
 import model.PaymentStrategy;
 import model.AuthorizationMethod;
 import model.Wallet;
@@ -11,13 +12,13 @@ import java.util.*;
 public class PaymentController {
     private PaymentView view;
     private Scanner scanner;
-    
+
     private List<PaymentStrategy> paymentMethods = new ArrayList<>();
 
     public PaymentController(PaymentView view) {
         this.view = view;
         this.scanner = new Scanner(System.in);
-        
+
         paymentMethods.add(new Wallet("Utama", 1000.0));
         paymentMethods.add(new DebitCard("dc-11-2221", 1000.0, "1234"));
         paymentMethods.add(new CreditCard("cc-11-2221", 1000, "123", "1234"));
@@ -62,7 +63,7 @@ public class PaymentController {
         view.printMessage("Daftar Metode Pembayaran Tersedia:");
         for (int i = 0; i < paymentMethods.size(); i++) {
             PaymentStrategy ps = paymentMethods.get(i);
-            view.printMessage((i + 1) + ". " + ps.getClass().getSimpleName());
+            view.printMessage((i + 1) + ". " + ps.getDetails());
         }
 
         int choice = ScannerUtil.inputInt("Pilih metode pembayaran (1 - " + paymentMethods.size() + "): ", scanner);
@@ -85,21 +86,21 @@ public class PaymentController {
         }
 
         List<AuthorizationMethod> requiredAuthorizations = paymentStrategy.getRequiredAuthorizations();
-        
+
         for (int i = 0; i < requiredAuthorizations.size(); i++) {
             AuthorizationMethod auth = requiredAuthorizations.get(i);
-            //belum jalan pin dan ccv nya
+            // belum jalan pin dan ccv nya
             switch (auth) {
                 case CCV:
                     String inputCcv = ScannerUtil.inputString("Masukkan CCV: ", scanner);
                     break;
-                    
+
                 case PIN:
                     String inputPin = ScannerUtil.inputString("Masukkan PIN: ", scanner);
                     break;
             }
         }
-        
+
         paymentStrategy.pay(amount);
     }
 

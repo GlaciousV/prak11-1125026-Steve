@@ -43,4 +43,8 @@ public class DebitCard implements PaymentStrategy {
         auths.add(AuthorizationMethod.PIN);
         return auths;
     }
+@Override
+    public String getDetails() {
+        return "Debit Card (" + cardNumber + ") - Saldo: " + balance;
+    }
 }
