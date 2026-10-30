@@ -20,7 +20,7 @@ public class DebitCard {
     public void pay(double amount) {
         if (validate(amount)) {
             this.balance -= amount;
-            System.out.println("Pemabayaran cash beharsil , sisa wallet : " + balance);
+            System.out.println("Pemabayaran cash beharsil , sisa debit : " + balance);
         } else {
             System.out.println("saldo : " + balance + " -> tidak cukup");
         }
