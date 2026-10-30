@@ -1,5 +1,9 @@
 package model;
-public class CreditCard {
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CreditCard implements PaymentStrategy {
     private String cardNumber;
     private double limit;
     private double currentDebt;
@@ -8,18 +12,34 @@ public class CreditCard {
 
     public CreditCard(String cardNumber, double limit, String ccv, String pin) {
         this.cardNumber = cardNumber;
-        this.currentDebt = 0.0;
         this.limit = limit;
+        this.currentDebt = 0.0;
         this.ccv = ccv;
         this.pin = pin;
     }
 
-    public boolean validate(double amount) {
-        return amount > 0 && this.limit >= amount;
+    public double getAvailableCredit() {
+        return this.limit - this.currentDebt;
     }
 
+    public String getCcv() {
+        return ccv;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    @Override
+    public boolean validate(double amount) {
+        // return amount > 0 && (this.limit - this.currentDebt) >= amount;
+        return  amount > 0 && getAvailableCredit() >= amount;
+    }
+
+    @Override
     public void pay(double amount) {
         if (validate(amount)) {
+            this.currentDebt += amount;
             this.limit -= amount;
             System.out.println("Pemabayaran cash beharsil , sisa saldo Credit Card : " + limit);
         } else {
@@ -27,7 +47,11 @@ public class CreditCard {
         }
     }
 
-    public double getAvailableCredit() {
-        return this.limit - this.currentDebt;
+    @Override
+    public List<AuthorizationMethod> getRequiredAuthorizations() {
+        List<AuthorizationMethod> auths = new ArrayList<>();
+        auths.add(AuthorizationMethod.CCV);
+        auths.add(AuthorizationMethod.PIN);
+        return auths;
     }
 }
