@@ -1,3 +1,4 @@
+package model;
 public class DebitCard {
     private String cardNumber;
     private double balance;

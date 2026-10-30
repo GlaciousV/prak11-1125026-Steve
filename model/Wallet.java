@@ -1,4 +1,4 @@
-
+package model;
 public class Wallet {
     private String name;
     private double cashValue;

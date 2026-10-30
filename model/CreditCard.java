@@ -1,3 +1,4 @@
+package model;
 public class CreditCard {
     private String cardNumber;
     private double limit;
