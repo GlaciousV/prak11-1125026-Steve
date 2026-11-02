@@ -7,4 +7,5 @@ public interface PaymentStrategy {
     void pay(double amount);
     List<AuthorizationMethod> getRequiredAuthorizations();
     String getDetails();
+    boolean canPay (double amount);
 }

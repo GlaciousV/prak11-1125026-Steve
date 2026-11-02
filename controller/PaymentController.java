@@ -61,11 +61,26 @@ public class PaymentController {
         }
 
         view.printMessage("Daftar Metode Pembayaran Tersedia:");
+        //
+        int availableCount = 0;
+
         for (int i = 0; i < paymentMethods.size(); i++) {
             PaymentStrategy ps = paymentMethods.get(i);
-            view.printMessage((i + 1) + ". " + ps.getDetails());
+            String itemText = (i + 1) + ". " + ps.getDetails();
+
+            if (!ps.canPay(amount)) {
+                itemText += " Anda tidak bisa menggunakan kartu ino";
+            } else {
+                availableCount++;
+            }
+            view.printMessage(itemText);
         }
 
+        if (availableCount == 0) {
+            System.out.println("=================");
+            view.printMessage("Tidak ada metode pembayaran yang mendukung nominal Rp " + amount);
+            return;
+        }
         int choice = ScannerUtil.inputInt("Pilih metode pembayaran (1 - " + paymentMethods.size() + "): ", scanner);
 
         if (choice > 0 && choice <= paymentMethods.size()) {
@@ -81,10 +96,13 @@ public class PaymentController {
     }
 
     private void processPayment(PaymentStrategy paymentStrategy, double amount) throws Exception {
+        if (!paymentStrategy.canPay(amount)) {
+            throw new Exception("Nominal transaksi diluar  nominal metode ini.");
+        }
+
         if (!paymentStrategy.validate(amount)) {
             throw new Exception("Saldo atau limit tidak mencukupi.");
         }
-
         List<AuthorizationMethod> requiredAuthorizations = paymentStrategy.getRequiredAuthorizations();
 
         for (int i = 0; i < requiredAuthorizations.size(); i++) {

@@ -59,4 +59,10 @@ public class CreditCard implements PaymentStrategy {
     public String getDetails() {
         return "Credit Card (" + cardNumber + ") - Limit Tersedia: " + getAvailableCredit();
     }
+
+    // 6
+    @Override
+    public boolean canPay(double amount) {
+        return amount >= 100000.0 && amount <= 100000000.0;
+    }
 }
