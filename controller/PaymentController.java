@@ -1,13 +1,14 @@
 package controller;
 
 import model.PaymentStrategy;
-import model.AuthorizationMethod;
+import model.AuthorizationStrategy;
 import model.Wallet;
 import model.DebitCard;
-import model.EWallet;
 import model.CreditCard;
+import model.EWallet;
 import view.PaymentView;
 import util.ScannerUtil;
+
 import java.util.*;
 
 public class PaymentController {
@@ -63,7 +64,6 @@ public class PaymentController {
         }
 
         view.printMessage("Daftar Metode Pembayaran Tersedia:");
-        //
         int availableCount = 0;
 
         for (int i = 0; i < paymentMethods.size(); i++) {
@@ -99,28 +99,21 @@ public class PaymentController {
 
     private void processPayment(PaymentStrategy paymentStrategy, double amount) throws Exception {
         if (!paymentStrategy.canPay(amount)) {
-            throw new Exception("Nominal transaksi diluar  nominal metode ini.");
+            throw new Exception("Nominal transaksi diluar batas nominal metode ini.");
         }
 
         if (!paymentStrategy.validate(amount)) {
             throw new Exception("Saldo atau limit tidak mencukupi.");
         }
-        List<AuthorizationMethod> requiredAuthorizations = paymentStrategy.getRequiredAuthorizations();
+
+        List<AuthorizationStrategy> requiredAuthorizations = paymentStrategy.getRequiredAuthorizations();
 
         for (int i = 0; i < requiredAuthorizations.size(); i++) {
-            AuthorizationMethod auth = requiredAuthorizations.get(i);
-            // belum jalan pin dan ccv nya
-            switch (auth) {
-                case CCV:
-                    String inputCcv = ScannerUtil.inputString("Masukkan CCV: ", scanner);
-                    break;
+            AuthorizationStrategy auth = requiredAuthorizations.get(i);
+            String input = ScannerUtil.inputString("Masukkan " + auth.getType() + ": ", scanner);
 
-                case PIN:
-                    String inputPin = ScannerUtil.inputString("Masukkan PIN: ", scanner);
-                    break;
-                case OTP:
-                    String inputOtp = ScannerUtil.inputString("Masukkan OTP: ", scanner);
-                    break;
+            if (!auth.verify(input)) {
+                throw new Exception(auth.getType() + " yang dimasukkan salah!");
             }
         }
 
@@ -158,7 +151,7 @@ public class PaymentController {
                 double saldoEwallet = ScannerUtil.inputDouble("Saldo Awal: ", scanner);
                 String pinEwallet = ScannerUtil.inputString("PIN: ", scanner);
                 paymentMethods.add(new EWallet(phone, saldoEwallet, pinEwallet));
-                view.printMessage("E-Wallet berhasil ditambahkan");
+                view.printMessage("E-Wallet berhasil ditambahkan.");
                 break;
             default:
                 view.printMessage("Pilihan jenis pembayaran tidak valid.");

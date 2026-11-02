@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EWallet implements PaymentStrategy {
@@ -46,8 +47,11 @@ public class EWallet implements PaymentStrategy {
     }
 
     @Override
-    public List<AuthorizationMethod> getRequiredAuthorizations() {
-        return List.of(AuthorizationMethod.PIN, AuthorizationMethod.OTP);
+    public List<AuthorizationStrategy> getRequiredAuthorizations() {
+        List<AuthorizationStrategy> auths = new ArrayList<>();
+        auths.add(new PinAuthorization(this.pin));
+        auths.add(new OtpAuthorization("123")); // OTP buat contoh aja ni
+        return auths;
     }
 
     @Override

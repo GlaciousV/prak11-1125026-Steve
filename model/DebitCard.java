@@ -38,12 +38,13 @@ public class DebitCard implements PaymentStrategy {
     }
 
     @Override
-    public List<AuthorizationMethod> getRequiredAuthorizations() {
-        List<AuthorizationMethod> auths = new ArrayList<>();
-        auths.add(AuthorizationMethod.PIN);
+    public List<AuthorizationStrategy> getRequiredAuthorizations() {
+        List<AuthorizationStrategy> auths = new ArrayList<>();
+        auths.add(new PinAuthorization(this.pin));
         return auths;
     }
-@Override
+
+    @Override
     public String getDetails() {
         return "Debit Card (" + cardNumber + ") - Saldo: " + balance;
     }

@@ -34,7 +34,7 @@ public class Wallet implements PaymentStrategy {
     }
 
     @Override
-    public List<AuthorizationMethod> getRequiredAuthorizations() {
+    public List<AuthorizationStrategy> getRequiredAuthorizations() {
         return new ArrayList<>();
     }
     @Override

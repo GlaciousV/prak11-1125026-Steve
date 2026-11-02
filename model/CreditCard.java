@@ -48,10 +48,10 @@ public class CreditCard implements PaymentStrategy {
     }
 
     @Override
-    public List<AuthorizationMethod> getRequiredAuthorizations() {
-        List<AuthorizationMethod> auths = new ArrayList<>();
-        auths.add(AuthorizationMethod.CCV);
-        auths.add(AuthorizationMethod.PIN);
+    public List<AuthorizationStrategy> getRequiredAuthorizations() {
+        List<AuthorizationStrategy> auths = new ArrayList<>();
+        auths.add(new CcvAuthorization(this.ccv));
+        auths.add(new PinAuthorization(this.pin));
         return auths;
     }
 

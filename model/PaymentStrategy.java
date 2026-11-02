@@ -5,7 +5,7 @@ import java.util.List;
 public interface PaymentStrategy {
     boolean validate(double amount);
     void pay(double amount);
-    List<AuthorizationMethod> getRequiredAuthorizations();
+    List<AuthorizationStrategy> getRequiredAuthorizations();
     String getDetails();
-    boolean canPay (double amount);
+    boolean canPay(double amount);
 }
