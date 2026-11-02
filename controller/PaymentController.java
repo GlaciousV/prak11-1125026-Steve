@@ -4,6 +4,7 @@ import model.PaymentStrategy;
 import model.AuthorizationMethod;
 import model.Wallet;
 import model.DebitCard;
+import model.EWallet;
 import model.CreditCard;
 import view.PaymentView;
 import util.ScannerUtil;
@@ -21,7 +22,8 @@ public class PaymentController {
 
         paymentMethods.add(new Wallet("Utama", 1000.0));
         paymentMethods.add(new DebitCard("dc-11-2221", 1000.0, "1234"));
-        paymentMethods.add(new CreditCard("cc-11-2221", 1000, "123", "1234"));
+        paymentMethods.add(new CreditCard("cc-11-2221", 1000, "123", "123"));
+        paymentMethods.add(new EWallet("08123456789", 500000.0, "123"));
     }
 
     public void start() {
@@ -116,6 +118,9 @@ public class PaymentController {
                 case PIN:
                     String inputPin = ScannerUtil.inputString("Masukkan PIN: ", scanner);
                     break;
+                case OTP:
+                    String inputOtp = ScannerUtil.inputString("Masukkan OTP: ", scanner);
+                    break;
             }
         }
 
@@ -147,6 +152,13 @@ public class PaymentController {
                 String pinCredit = ScannerUtil.inputString("PIN: ", scanner);
                 paymentMethods.add(new CreditCard(cnCredit, limit, ccv, pinCredit));
                 view.printMessage("Credit Card berhasil ditambahkan.");
+                break;
+            case 4:
+                String phone = ScannerUtil.inputString("Nomor HP: ", scanner);
+                double saldoEwallet = ScannerUtil.inputDouble("Saldo Awal: ", scanner);
+                String pinEwallet = ScannerUtil.inputString("PIN: ", scanner);
+                paymentMethods.add(new EWallet(phone, saldoEwallet, pinEwallet));
+                view.printMessage("E-Wallet berhasil ditambahkan");
                 break;
             default:
                 view.printMessage("Pilihan jenis pembayaran tidak valid.");

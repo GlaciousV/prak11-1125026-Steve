@@ -2,5 +2,6 @@ package model;
 
 public enum AuthorizationMethod {
     CCV,
-    PIN
+    PIN,
+    OTP
 }
